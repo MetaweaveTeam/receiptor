@@ -1,0 +1,26 @@
+.wallet-connect-button {
+  padding: 10px;
+  height: 40px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  column-gap: 3px;
+  align-items: center;
+  justify-content: space-between;
+  color: rgba(255,255,255,1);
+  background-color: rgba(81,109,251,1);
+  font-weight: 600;
+  border: 0;
+  transition: background-color 0.3s, opacity 0.3s;
+}
+
+.wallet-connect-button:hover {
+  background-color: rgba(81,109,251,0.9);
+}
+
+.wallet-connect-button-connecting {
+  color: rgba(81,109,251,1);
+  background-color: black;
+}
+
+.wallet-connect-button-connecting svg { color: rgba(81,109,251,1) }
