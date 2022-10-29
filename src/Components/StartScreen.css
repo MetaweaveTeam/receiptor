@@ -24,3 +24,7 @@
 }
 
 .wallet-connect-button-connecting svg { color: rgba(81,109,251,1) }
+
+.wallet-address {
+  font-family: monospace;
+}

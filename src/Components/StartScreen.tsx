@@ -1,5 +1,5 @@
 import { Text, Dropdown, Input, Image, Grid, Checkbox, Spacer, Container, FormElement, Button } from '@nextui-org/react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useConnectModal, useAccount, useDisconnect } from '@web3modal/react';
 import { ethers } from 'ethers';
@@ -10,7 +10,9 @@ const provider = new ethers.providers.InfuraProvider()
 enum Status { pending = 'primary', error = 'error', ok = 'success' }
 
 export default function StartScreen() {
+  const [txidValue, setTxidValue] = useState<ethers.providers.TransactionResponse>();
   const [txid, setTxid] = useState("");
+  const [txidPlaceholder, setTxidPlaceholder] = useState("txid");
   const [txidStatus, setTxidStatus] = useState(Status.error);
   const [formIsValid, setFormIsValid] = useState(false);
   const formStatus = useRef({txid: false, tac: false})
@@ -20,6 +22,21 @@ export default function StartScreen() {
 
   const updateFormStatus = () => setFormIsValid(formStatus.current.txid && formStatus.current.tac)
 
+  useEffect(() => {
+    if(walletAccount.account.isConnected && txidValue){
+      if(txidValue.from === walletAccount.account.address || txidValue.to === walletAccount.account.address){
+        setTxidPlaceholder("Okay!")
+        formStatus.current.txid = true;
+      }
+      else{
+        setTxidPlaceholder("Your wallet address is not part of this transaction")
+        setTxidStatus(Status.error)
+        formStatus.current.txid = false;
+      }
+      updateFormStatus();
+    }
+  }, [walletAccount.account.isConnected, walletAccount.account.address, txidValue])
+
   const onChangeTxid = (txid: React.ChangeEvent<FormElement>) => {
     setTxid(txid.currentTarget.value);
     setTxidStatus(Status.pending);
@@ -27,11 +44,14 @@ export default function StartScreen() {
     .then(value => {
       formStatus.current.txid = value ? true : false;
       setTxidStatus(value ? Status.ok : Status.error);
+      setTxidPlaceholder(value ? 'valid transaction id' : 'invalid transaction id');
+      setTxidValue(value)
     })
     .catch((e: Error) => {
       console.debug(e.message);
       formStatus.current.txid = false;
       setTxidStatus(Status.error);
+      setTxidPlaceholder("invalid hash")
     })
     .finally(() => {
       updateFormStatus();
@@ -57,7 +77,7 @@ export default function StartScreen() {
       value={txid}
       clearable
       bordered
-      labelPlaceholder="txid"
+      labelPlaceholder={txidPlaceholder}
       width='100%'
     />
     <Spacer y={0.5} />
@@ -86,9 +106,15 @@ export default function StartScreen() {
       <Grid>
         {walletAccount.account.isConnected
         ? <>
-            {walletAccount.account.address}
-            <Button color="warning" onClick={disconnect}>disconnect</Button>
-            <Button disabled={!formIsValid} color="secondary">continue</Button>
+            <Grid className='wallet-address'>
+              <a href="https://rainbow.me/0xeEEe8f7922E99ce6CEd5Cb2DaEdA5FE80Df7C95e" target="_blank" rel="noreferrer">
+                {walletAccount.account.address}
+              </a>
+            </Grid>
+            <Grid.Container justify='space-between'>
+              <Button color="error" onClick={disconnect}>disconnect</Button>
+              <Button disabled={!formIsValid} color="secondary">continue</Button>
+            </Grid.Container>
           </>
         : <button
             disabled={!formIsValid}
