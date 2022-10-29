@@ -29,7 +29,7 @@ export default function ProofOfReceipt() {
         });
     } else {
       setError("Invalid arweave transaction id");
-      // setLoading(false);
+      setLoading(false);
     }
   }, [ar_txid]);
 
