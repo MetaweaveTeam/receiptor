@@ -27,11 +27,11 @@ export default function ProofOfReceipt() {
             setError(error.message);
           }
         ).finally(() => {
-          // setLoading(false);
+          setLoading(false);
         });
     } else {
       setError("Invalid arweave transaction id");
-      // setLoading(false);
+      setLoading(false);
     }
   }, [ar_txid]);
 
