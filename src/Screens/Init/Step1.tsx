@@ -4,8 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useConnectModal, useAccount, useDisconnect } from '@web3modal/react';
 import { ethers } from 'ethers';
 import ABI from '../../ABI/usdt.json';
-
-const provider = new ethers.providers.InfuraProvider()
+import { provider } from '../../constants';
 
 enum Status { pending = 'primary', error = 'error', ok = 'success' }
 

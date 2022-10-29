@@ -20,8 +20,8 @@ interface ArTag {
 
 interface PoR {
   txid: `0x${string}`;
-  vat: number;
   notes: string;
+  vat: number;
 }
 
 export { ArTransaction, ArTag, PoR };

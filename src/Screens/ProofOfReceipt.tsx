@@ -1,8 +1,9 @@
-import { Container, Grid, Image, Spacer, Text } from '@nextui-org/react';
+import { Container, Grid, Image, Spacer, Text, Textarea } from '@nextui-org/react';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import './ProofOfReceipt.css';
 import { PoR } from '../types';
+import { provider } from '../constants';
 
 export default function ProofOfReceipt() {
   const { ar_txid } = useParams();
@@ -10,19 +11,41 @@ export default function ProofOfReceipt() {
   const [loading, setLoading] = useState(true);
   const [porData, setPorData] = useState<PoR>();
 
+  const getTxidData = (por: PoR) => {
+    provider.getTransaction(por.txid)
+    .then(txData => {
+      console.log(txData);
+      setPorData(por)
+    })
+    .catch((e: Error) => setError(e.message))
+    .finally(() => setLoading(false))
+  }
+
   useEffect(() => {
     if (ar_txid && /^([a-z,A-Z,0-9,\-,_]{43})$/.test(ar_txid)) {
       fetch(`http://localhost:3001/${ar_txid}`)
         .then(res => res.json())
-        .then((result: PoR) => setPorData(result),
-          // Note: it's important to handle errors here
-          // instead of a catch() block so that we don't swallow
-          // exceptions from actual bugs in components.
-          // https://reactjs.org/docs/faq-ajax.html
-          (error) => setError(error.message)
-        ).finally(() => {
+        .then((result: PoR) => {
+          result = {
+            txid: "0xcc933e6b093754a592a35b24d70a7f2322f0819ff4b64bf88b2f71078bce0169",
+            vat: 0,
+            notes: "Merry Christmas!"
+          };
+          if(result.txid && result.vat >= 0 && result.vat < 100 && result.notes)
+            getTxidData(result)
+          else{
+            setError("corrupted data")
+            setLoading(false);
+          }
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        // https://reactjs.org/docs/faq-ajax.html
+        (error) => {
+          setError(error.message)
           setLoading(false);
-        });
+        })
     } else {
       setError("Invalid arweave transaction id");
       setLoading(false);
@@ -67,8 +90,11 @@ export default function ProofOfReceipt() {
 
   const Success = () => {
     return(<>
-      {JSON.stringify(porData)}
-    </>);
+      <pre>
+        {JSON.stringify(porData, null, 2)}
+      </pre>
+    </>
+    );
   };
 
   return(<Container fluid>
