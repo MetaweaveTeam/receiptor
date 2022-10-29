@@ -28,3 +28,38 @@
 .wallet-address, .txid {
   font-family: monospace;
 }
+
+.step2-loader {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  background-color: rgba(0, 0, 0, 0.5);
+  transform: rotate(45deg);
+  overflow: hidden;
+}
+
+.step2-loader:after{
+  content: '';
+  position: absolute;
+  inset: 8px;
+  margin: auto;
+  background: #222b32;
+}
+
+.step2-loader:before{
+  content: '';
+  position: absolute;
+  inset: -25px;
+  margin: auto;
+  background: #D007E5;
+  animation: diamondLoader 2s linear alternate-reverse infinite;
+}
+
+@keyframes diamondLoader {
+  0%  ,10% {
+    transform: translate(-120px , -120px) rotate(-50deg)
+  }
+  90% , 100% {
+    transform: translate(0px , 0px) rotate(-45deg)
+  }
+}
