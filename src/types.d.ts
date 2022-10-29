@@ -18,4 +18,10 @@ interface ArTag {
   value: string;
 }
 
-export { ArTransaction, ArTag };
+interface PoR {
+  txid: `0x${string}`;
+  vat: number;
+  notes: string;
+}
+
+export { ArTransaction, ArTag, PoR };

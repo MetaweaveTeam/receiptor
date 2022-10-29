@@ -2,30 +2,24 @@ import { Container, Grid, Image, Spacer, Text } from '@nextui-org/react';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import './ProofOfReceipt.css';
-import { ArTransaction } from '../types';
+import { PoR } from '../types';
 
 export default function ProofOfReceipt() {
   const { ar_txid } = useParams();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [tx, setTX] = useState<ArTransaction>();
+  const [porData, setPorData] = useState<PoR>();
 
   useEffect(() => {
     if (ar_txid && /^([a-z,A-Z,0-9,\-,_]{43})$/.test(ar_txid)) {
       fetch(`http://localhost:3001/${ar_txid}`)
         .then(res => res.json())
-        .then(
-          (result: ArTransaction) => {
-            setTX(result);
-          },
-
+        .then((result: PoR) => setPorData(result),
           // Note: it's important to handle errors here
           // instead of a catch() block so that we don't swallow
           // exceptions from actual bugs in components.
           // https://reactjs.org/docs/faq-ajax.html
-          (error) => {
-            setError(error.message);
-          }
+          (error) => setError(error.message)
         ).finally(() => {
           setLoading(false);
         });
@@ -35,8 +29,8 @@ export default function ProofOfReceipt() {
     }
   }, [ar_txid]);
 
-  const Loading = (props: {txid: String}) => {
-    let txid = `${props.txid.slice(0,10)}...${props.txid.slice(-10,props.txid.length)}`;
+  const Loading = () => {
+    const slicedTxid = `${ar_txid?.slice(0,10)}...${ar_txid?.slice(-10, ar_txid.length)}`;
     return (<>
       <Spacer y={4} />
       <Grid.Container justify="center">
@@ -48,7 +42,7 @@ export default function ProofOfReceipt() {
           <Text h4>Retrieving Proof-of-Receipt...</Text>
         </Grid>
         <Grid xs={12} justify="center">
-          <Text h3>{txid}</Text>
+          <Text h3>{slicedTxid}</Text>
         </Grid>
         <Spacer y={2} />
         <Grid xs={12} justify="center">
@@ -61,7 +55,6 @@ export default function ProofOfReceipt() {
     </>);
   }
 
-
   const Error = (props: {error: String}) => <>
     <Spacer y={4} />
     <div style={{textAlign: 'center'}}>
@@ -72,55 +65,9 @@ export default function ProofOfReceipt() {
     </div>
   </>
 
-  const Success = (props: {tx: ArTransaction}) => {
-    const tx = props.tx;
-    console.log(tx);
-    var format = tx.format,
-        id = tx.id,
-        last_tx = tx.last_tx,
-        owner = tx.owner,
-        tags = tx.tags,
-        target = tx.target,
-        quantity = tx.quantity,
-        data_root = tx.data_root,
-        data = tx.data,
-        data_size = tx.data_size,
-        reward = tx.reward,
-        signature = tx.signature;
-    return (<>
-      <div>
-        <Text h3>Proof-of-Receipt</Text>
-        <Spacer y={2} />
-        <Text h4>Transaction ID</Text>
-        <Text>{id}</Text>
-        <Spacer y={2} />
-        <Text h4>Owner</Text>
-        <Text>{owner}</Text>
-        <Spacer y={2} />
-        <Text h4>Target</Text>
-        <Text>{target}</Text>
-        <Spacer y={2} />
-        <Text h4>Quantity</Text>
-        <Text>{quantity}</Text>
-        <Spacer y={2} />
-        <Text h4>Data</Text>
-        <Text>{data}</Text>
-        <Spacer y={2} />
-        <Text h4>Data Size</Text>
-        <Text>{data_size}</Text>
-        <Spacer y={2} />
-        <Text h4>Data Root</Text>
-        <Text>{data_root}</Text>
-        <Spacer y={2} />
-        <Text h4>Reward</Text>
-        <Text>{reward}</Text>
-        <Spacer y={2} />
-        <Text h4>Signature</Text>
-        <Text>{signature}</Text>
-        <Spacer y={2} />
-        <Text h4>Last Transaction</Text>
-        <Text>{last_tx}</Text>
-      </div>
+  const Success = () => {
+    return(<>
+      {JSON.stringify(porData)}
     </>);
   };
 
@@ -130,12 +77,10 @@ export default function ProofOfReceipt() {
     <Text h1 style={{textAlign: 'center'}}>Receiptor.xyz</Text>
     <Text h3 style={{textAlign: 'center'}}>Create receipts from your crypto transactions.</Text>
     {loading
-      ? <Loading txid={ar_txid ? ar_txid : ''} />
+      ? <Loading />
       : error
       ? <Error error={error} />
-      : tx
-      ? <Success tx={tx} />
-      : ''
+      : <Success />
     }
   </Container>)
 }
