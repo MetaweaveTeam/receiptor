@@ -6,7 +6,11 @@ import reportWebVitals from './reportWebVitals';
 import ProofOfReceipt from './Screens/ProofOfReceipt';
 import { NextUIProvider } from '@nextui-org/react';
 import { Web3Modal } from '@web3modal/react';
-import StartScreen from './Screens/Init';
+import StartScreen from './Screens/Init/Index';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+
+library.add(fas)
 
 const router = createBrowserRouter([
   {
