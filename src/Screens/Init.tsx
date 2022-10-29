@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useConnectModal, useAccount, useDisconnect } from '@web3modal/react';
 import { ethers } from 'ethers';
-import './StartScreen.css';
+import './Init.css';
 
 const provider = new ethers.providers.InfuraProvider()
 
@@ -70,7 +70,7 @@ export default function StartScreen() {
 
   return (<Container fluid>
     <Image height="10rem" src="https://arweave.net/iLd18mc2LrOuOdnimK6SnzPXedIidIgnQK4oBKZePhQ" alt="Receiptor's Logo" />
-    <Text h1 style={{textAlign: 'center'}}>Receiptor</Text>
+    <Text h1 style={{textAlign: 'center'}}>Receiptor.xyz</Text>
     <Text h3 style={{textAlign: 'center'}}>Create receipts from your crypto transactions.</Text>
     <Spacer y={2} />
     <Input
