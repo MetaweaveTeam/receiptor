@@ -1,34 +1,76 @@
+/* Icon Animation */
 .loader {
-  width: 80px;
-  height: 80px;
-  border: 3px solid #151515;
-  border-radius: 50%;
-  display: inline-block;
+  width: 48px;
+  height: 48px;
+  display: block;
+  margin: 20px auto;
   position: relative;
+  border: 3px solid rgb(126, 166, 39);
+  border-radius: 50%;
   box-sizing: border-box;
-  animation: rotation 1s linear infinite;
+  animation: animloader 2s linear infinite;
 }
 .loader::after {
   content: '';
   box-sizing: border-box;
+  width: 6px;
+  height: 24px;
+  background: rgb(126, 166, 39);
+  transform: rotate(-45deg);
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  border: 3px solid;
-  border-color: #D007E5 transparent;
+  bottom: -20px;
+  left: 46px;
 }
 
-@keyframes rotation {
+@keyframes animloader {
   0% {
-    transform: rotate(0deg);
+    transform: translate(-10px, -10px);
+  }
+  25% {
+    transform: translate(-10px, 10px);
+  }
+  50% {
+    transform: translate(10px, 10px);
+  }
+  75% {
+    transform: translate(10px, -10px);
   }
   100% {
-    transform: rotate(360deg);
+    transform: translate(-10px, -10px);
   }
 }
 
+/* Text Animation */
+.loader_title {
+  color: rgb(3, 3, 3);
+  display: inline-block;
+  position: relative;
+  font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+}
+.loader_title::after {
+  content: '';
+  width: 4px;
+  height: 4px;
+  background: currentColor;
+  position: absolute;
+  bottom: 10px;
+  right: -10px;
+  box-sizing: border-box;
+  animation: animloader_title 1s linear infinite;
+}
+
+@keyframes animloader_title {
+  0% {
+    box-shadow: 10px 0 #fff, 20px 0 #fff;
+  }
+  50% {
+    box-shadow: 10px 0 #000, 20px 0 #fff;
+  }
+  100% {
+    box-shadow: 10px 0 #000, 20px 0 #000;
+  }
+}
+
+/* Arweave logo classes */
 .cls-1{fill:#222326;}.cls-2{fill:none;stroke:#222326;stroke-miterlimit:10;stroke-width:9.65px;}
