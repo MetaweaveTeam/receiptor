@@ -26,6 +26,7 @@ export default function StartScreen() {
     if(walletAccount.account.isConnected && txidValue){
       if(txidValue.from === walletAccount.account.address || txidValue.to === walletAccount.account.address){
         setTxidPlaceholder("Okay!")
+        setTxidStatus(Status.ok);
         formStatus.current.txid = true;
       }
       else{
@@ -40,6 +41,7 @@ export default function StartScreen() {
   const onChangeTxid = (txid: React.ChangeEvent<FormElement>) => {
     setTxid(txid.currentTarget.value);
     setTxidStatus(Status.pending);
+    setTxidPlaceholder("loading...");
     provider.getTransaction(txid.currentTarget.value)
     .then(value => {
       formStatus.current.txid = value ? true : false;
