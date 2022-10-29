@@ -1,15 +1,15 @@
-import { Text, Dropdown, Input, Image, Grid, Checkbox, Spacer, Container, FormElement, Button } from '@nextui-org/react';
+import { Text, Dropdown, Input, Image, Grid, Checkbox, Spacer, FormElement, Button } from '@nextui-org/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useConnectModal, useAccount, useDisconnect } from '@web3modal/react';
 import { ethers } from 'ethers';
-import './Init.css';
+import ABI from '../../ABI/usdt.json';
 
 const provider = new ethers.providers.InfuraProvider()
 
 enum Status { pending = 'primary', error = 'error', ok = 'success' }
 
-export default function StartScreen() {
+export default function Step1({ submit }: { submit: (txidValue: ethers.providers.TransactionResponse) => void }) {
   const [txidValue, setTxidValue] = useState<ethers.providers.TransactionResponse>();
   const [txid, setTxid] = useState("");
   const [txidPlaceholder, setTxidPlaceholder] = useState("txid");
@@ -24,7 +24,9 @@ export default function StartScreen() {
 
   useEffect(() => {
     if(walletAccount.account.isConnected && txidValue){
-      if(txidValue.from === walletAccount.account.address || txidValue.to === walletAccount.account.address){
+      const iface = new ethers.utils.Interface(ABI);
+      let decodedData = iface.parseTransaction({ data: txidValue.data, value: txidValue.value });
+      if(txidValue.from === walletAccount.account.address || decodedData.args[0] === walletAccount.account.address){
         setTxidPlaceholder("Okay!")
         setTxidStatus(Status.ok);
         formStatus.current.txid = true;
@@ -68,7 +70,8 @@ export default function StartScreen() {
     updateFormStatus();
   }
 
-  return (<Container fluid>
+  return(<>
+    <Spacer y={2} />
     <Image height="10rem" src="https://arweave.net/iLd18mc2LrOuOdnimK6SnzPXedIidIgnQK4oBKZePhQ" alt="Receiptor's Logo" />
     <Text h1 style={{textAlign: 'center'}}>Receiptor.xyz</Text>
     <Text h3 style={{textAlign: 'center'}}>Create receipts from your crypto transactions.</Text>
@@ -115,7 +118,7 @@ export default function StartScreen() {
             </Grid>
             <Grid.Container justify='space-between'>
               <Button color="error" onClick={disconnect}>disconnect</Button>
-              <Button disabled={!formIsValid} color="secondary">continue</Button>
+              <Button disabled={!formIsValid} color="gradient" onPress={() => txidValue && submit(txidValue)}>continue</Button>
             </Grid.Container>
           </>
         : <button
@@ -143,5 +146,5 @@ export default function StartScreen() {
         </Text>
       </Grid>
     </Grid.Container>
-  </Container>);
+  </>)
 }
