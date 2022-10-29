@@ -1,20 +1,22 @@
-import { Container, Grid, Image, Spacer, Text } from "@nextui-org/react";
-import { useParams } from "react-router-dom";
+import { Container, Grid, Image, Spacer, Text } from '@nextui-org/react';
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import './ProofOfReceipt.css';
+import { ArTransaction } from '../types';
 
 export default function ProofOfReceipt() {
   const { ar_txid } = useParams();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [tx, setTX] = useState<ArTransaction>();
 
   useEffect(() => {
     if (ar_txid && /^([a-z,A-Z,0-9,\-,_]{43})$/.test(ar_txid)) {
       fetch(`http://localhost:3001/${ar_txid}`)
         .then(res => res.json())
         .then(
-          (result) => {
-            console.log(JSON.stringify(result));
+          (result: ArTransaction) => {
+            setTX(result);
           },
 
           // Note: it's important to handle errors here
@@ -29,7 +31,7 @@ export default function ProofOfReceipt() {
         });
     } else {
       setError("Invalid arweave transaction id");
-      // setLoading(false);
+      setLoading(false);
     }
   }, [ar_txid]);
 
@@ -70,11 +72,57 @@ export default function ProofOfReceipt() {
     </div>
   </>
 
-  const Success = () => <>
-    <div>
-      Success
-    </div>
-  </>
+  const Success = (props: {tx: ArTransaction}) => {
+    const tx = props.tx;
+    console.log(tx);
+    var format = tx.format,
+        id = tx.id,
+        last_tx = tx.last_tx,
+        owner = tx.owner,
+        tags = tx.tags,
+        target = tx.target,
+        quantity = tx.quantity,
+        data_root = tx.data_root,
+        data = tx.data,
+        data_size = tx.data_size,
+        reward = tx.reward,
+        signature = tx.signature;
+    return (<>
+      <div>
+        <Text h3>Proof-of-Receipt</Text>
+        <Spacer y={2} />
+        <Text h4>Transaction ID</Text>
+        <Text>{id}</Text>
+        <Spacer y={2} />
+        <Text h4>Owner</Text>
+        <Text>{owner}</Text>
+        <Spacer y={2} />
+        <Text h4>Target</Text>
+        <Text>{target}</Text>
+        <Spacer y={2} />
+        <Text h4>Quantity</Text>
+        <Text>{quantity}</Text>
+        <Spacer y={2} />
+        <Text h4>Data</Text>
+        <Text>{data}</Text>
+        <Spacer y={2} />
+        <Text h4>Data Size</Text>
+        <Text>{data_size}</Text>
+        <Spacer y={2} />
+        <Text h4>Data Root</Text>
+        <Text>{data_root}</Text>
+        <Spacer y={2} />
+        <Text h4>Reward</Text>
+        <Text>{reward}</Text>
+        <Spacer y={2} />
+        <Text h4>Signature</Text>
+        <Text>{signature}</Text>
+        <Spacer y={2} />
+        <Text h4>Last Transaction</Text>
+        <Text>{last_tx}</Text>
+      </div>
+    </>);
+  };
 
   return(<Container fluid>
     <Spacer y={2} />
@@ -85,7 +133,9 @@ export default function ProofOfReceipt() {
       ? <Loading txid={ar_txid ? ar_txid : ''} />
       : error
       ? <Error error={error} />
-      : <Success />
+      : tx
+      ? <Success tx={tx} />
+      : ''
     }
   </Container>)
 }
