@@ -7,6 +7,8 @@ $ npm i
 $ npm start
 ```
 
+node: https://github.com/MetaweaveTeam/receiptor_node/
+
 # Notes
 
 Compatibility: https://arweave.net/v5jllCigVyFJc8inajO_gVEvtA-s9ws1gXKWvpfrQOQ

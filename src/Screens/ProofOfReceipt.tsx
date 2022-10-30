@@ -1,9 +1,9 @@
-import { Container, Grid, Image, Spacer, Text, Textarea } from '@nextui-org/react';
+import { Container, Grid, Image, Spacer, Text } from '@nextui-org/react';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import './ProofOfReceipt.css';
 import { PoR } from '../types';
-import { provider } from '../constants';
+import { nodeURL, provider } from '../constants';
 
 export default function ProofOfReceipt() {
   const { ar_txid } = useParams();
@@ -23,7 +23,7 @@ export default function ProofOfReceipt() {
 
   useEffect(() => {
     if (ar_txid && /^([a-z,A-Z,0-9,\-,_]{43})$/.test(ar_txid)) {
-      fetch(`http://localhost:3001/${ar_txid}`)
+      fetch(`${nodeURL}/post/${ar_txid}`)
         .then(res => res.json())
         .then((result: PoR) => {
           result = {
