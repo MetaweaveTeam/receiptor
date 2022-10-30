@@ -5,6 +5,7 @@ import { useConnectModal, useAccount, useDisconnect } from '@web3modal/react';
 import { ethers } from 'ethers';
 import ABI from '../../ABI/usdt.json';
 import { provider } from '../../constants';
+import './Index.css';
 
 enum Status { pending = 'primary', error = 'error', ok = 'success' }
 
@@ -107,17 +108,20 @@ export default function Step1({ submit }: { submit: (txidValue: ethers.providers
           </Text>
         </Checkbox>
       </Grid>
-      <Grid>
+      <Grid justify='center'>
         {walletAccount.account.isConnected
         ? <>
             <Grid className='wallet-address'>
-              <a href="https://rainbow.me/0xeEEe8f7922E99ce6CEd5Cb2DaEdA5FE80Df7C95e" target="_blank" rel="noreferrer">
+              <a className='mobile_wallet' href="https://rainbow.me/0xeEEe8f7922E99ce6CEd5Cb2DaEdA5FE80Df7C95e" target="_blank" rel="noreferrer">
+                {`${walletAccount.account.address.slice(0, 6)}...${walletAccount.account.address.slice(-4)}`}
+              </a>
+              <a className='wallet' href="https://rainbow.me/0xeEEe8f7922E99ce6CEd5Cb2DaEdA5FE80Df7C95e" target="_blank" rel="noreferrer">
                 {walletAccount.account.address}
               </a>
             </Grid>
-            <Grid.Container justify='space-between'>
-              <Button color="error" onClick={disconnect}>disconnect</Button>
-              <Button disabled={!formIsValid} color="gradient" onPress={() => txidValue && submit(txidValue)}>continue</Button>
+            <Grid.Container justify='center' style={{marginLeft: 'auto', marginRight: 'auto', padding: '4px'}}>
+              <Button color="error" onClick={disconnect} style={{marginLeft: 'auto', marginRight: 'auto', marginTop: '5px', marginBottom: '5px'}}>disconnect</Button>
+              <Button disabled={!formIsValid} color="gradient" onPress={() => txidValue && submit(txidValue)} style={{marginLeft: 'auto', marginRight: 'auto', marginTop: '5px', marginBottom: '5px'}}>continue</Button>
             </Grid.Container>
           </>
         : <button

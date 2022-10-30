@@ -63,3 +63,25 @@
     transform: translate(0px , 0px) rotate(-45deg)
   }
 }
+
+/* Wallet Mobile friendly */
+@media (max-width: 768px) {
+  .wallet {
+    display: none;
+  }
+  .mobile_wallet {
+    display: block;
+    justify-self: center;
+    text-align: center;
+  }
+}
+
+@media (min-width: 768px) {
+  .wallet {
+    display: block;
+  }
+  .mobile_wallet {
+    display: none;
+  }
+}
+
