@@ -1,15 +1,13 @@
-import { Link } from '@nextui-org/react';
-// import useWindowSize from './../hooks/useWindowSize'
+import { Link } from "@nextui-org/react"
 
-export default function Txid({hash}: {hash: `0x${string}`}) {
-  // const [width] = useWindowSize();
+export default function EthAddress({hash}: {hash: `0x${string}`}) {
 
   return(
     <Link
-      color="secondary"
       block
+      color="secondary"
       isExternal
-      href={`https://etherscan.io/tx/${hash}`}
+      href={`https://etherscan.io/address/${hash}`}
       style={style}
       target='_blank'
       rel="noreferrer"

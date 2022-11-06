@@ -4,9 +4,10 @@ import ABI from '../../ABI/usdt.json';
 import './Index.css';
 import {useAccount} from '@web3modal/react';
 import { fetchToken } from '@wagmi/core';
-import { Button, Grid, Text, Spacer, Card } from '@nextui-org/react';
+import { Button, Grid, Text, Spacer, Card, Textarea } from '@nextui-org/react';
 import { PoR, Receipt } from '../../types';
 import Txid from '../../Components/Txid';
+import EthAddress from '../../Components/EthAddress';
 import UserInput from '../../Components/UserInput';
 import { provider } from '../../constants';
 
@@ -94,26 +95,24 @@ export default function Step2({tx, submit}: {tx: ethers.providers.TransactionRes
             <Spacer y={2} />
             <Text h2 css={{textAlign: 'center'}}>{receipt.amount} {receipt.erc20.ticker}</Text>
             <Text>{receipt.erc20.name}</Text>
-            <Spacer y={2} />
+            <Spacer />
+            <Card.Divider />
+            <Spacer />
             <Text h2>from {walletAccount.account.address === receipt.from && '(you)'}</Text>
-            <Card>
-              <Card.Body>
-                <a className='wallet-address' target='_blank' rel="noreferrer" href={`https://etherscan.io/address/${receipt.from}`}>{tx.from}</a>
-              </Card.Body>
-            </Card>
+            <Text h3><EthAddress hash={receipt.from} /></Text>
+              <Textarea aria-label='notes' disabled size="lg" placeholder="The other party will be able to provide custom notes" css={{width: '100%'}}/>
             <Spacer y={2} />
             <Text h2>to {walletAccount.account.address === receipt.to && '(you)'}</Text>
+            <Text h3><EthAddress hash={receipt.to} /></Text>
             <Card>
               <Card.Body>
-            <a className='wallet-address' target='_blank' rel="noreferrer" href={`https://etherscan.io/address/${receipt.to}`}>{receipt.to}</a>
-            <UserInput amount={receipt.amount} onChange={onUserInputChange} />
-            </Card.Body>
+                <UserInput amount={receipt.amount} onChange={onUserInputChange} />
+              </Card.Body>
+              <Button color="gradient" onPress={() => submit({txid: tx.hash as `0x${string}`, vat: vat, notes: notes})}>SIGN & ENCRYPT ({`${otherPartieAddress?.slice(0,6)}...${otherPartieAddress?.slice(-4,otherPartieAddress.length)})`}</Button>
             </Card>
+            <Spacer />
           </Card.Body>
         </Card>
-        <Spacer y={2} />
-        <Button color="gradient" onPress={() => submit({txid: tx.hash as `0x${string}`, vat: vat, notes: notes})}>encrypt for {`${otherPartieAddress?.slice(0,10)}...${otherPartieAddress?.slice(-10,otherPartieAddress.length)}`}</Button>
-        <Spacer y={2} />
       </Grid.Container>
   )
 }
