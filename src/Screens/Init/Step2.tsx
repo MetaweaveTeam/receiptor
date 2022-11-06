@@ -51,17 +51,18 @@ export default function Step2({tx, submit}: {tx: ethers.providers.TransactionRes
         return provider.getBlock(tx.blockHash)
     })
     .then((block) => {
-      console.log(block?.timestamp)
-      setReceipt((prevReceipt: Receipt): Receipt => {
-        return {
-          ...prevReceipt,
-          timestamp: block?.timestamp
-        }
-      })
+      if(block?.timestamp){
+        setReceipt((prevReceipt: Receipt): Receipt => {
+          return {
+            ...prevReceipt,
+            timestamp: block.timestamp,
+            date: new Date(block.timestamp * 1000).toDateString()
+          }
+        })
+      }
     })
     .catch((e) => console.log(e))
-
-    setIsLoading(false)
+    .finally(() => setIsLoading(false))
   }, [tx])
 
   const otherPartieAddress = walletAccount.account.address === tx.from ? receipt.to : tx.from
@@ -87,21 +88,27 @@ export default function Step2({tx, submit}: {tx: ethers.providers.TransactionRes
           <Card.Body>
             <Text h1 css={{textAlign: 'right'}}>Receipt</Text>
             <Text css={{textAlign: 'right'}}>no. <Txid hash={tx.hash as `0x${string}`} /></Text>
-            <Text css={{textAlign: 'right'}}>Date {receipt.timestamp}</Text>
+            <Text css={{textAlign: 'right'}}>{receipt.date}</Text>
             <Spacer y={0.5} />
             <Card.Divider />
             <Spacer y={2} />
             <Text h2 css={{textAlign: 'center'}}>{receipt.amount} {receipt.erc20.ticker}</Text>
             <Text>{receipt.erc20.name}</Text>
             <Spacer y={2} />
-            <Text b>from {walletAccount.account.address === receipt.from && '(you)'}</Text>
-            <a className='wallet-address' target='_blank' rel="noreferrer" href={`https://etherscan.io/address/${receipt.from}`}>{tx.from}</a>
-            <Card.Divider />
-            <Text b>
-              to {walletAccount.account.address === receipt.to && '(you)'}
-            </Text>
+            <Text h2>from {walletAccount.account.address === receipt.from && '(you)'}</Text>
+            <Card>
+              <Card.Body>
+                <a className='wallet-address' target='_blank' rel="noreferrer" href={`https://etherscan.io/address/${receipt.from}`}>{tx.from}</a>
+              </Card.Body>
+            </Card>
+            <Spacer y={2} />
+            <Text h2>to {walletAccount.account.address === receipt.to && '(you)'}</Text>
+            <Card>
+              <Card.Body>
             <a className='wallet-address' target='_blank' rel="noreferrer" href={`https://etherscan.io/address/${receipt.to}`}>{receipt.to}</a>
             <UserInput amount={receipt.amount} onChange={onUserInputChange} />
+            </Card.Body>
+            </Card>
           </Card.Body>
         </Card>
         <Spacer y={2} />

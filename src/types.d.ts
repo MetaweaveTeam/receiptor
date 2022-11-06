@@ -27,6 +27,7 @@ interface PoR {
 interface Receipt {
   txid: `0x${string}`;
   timestamp?: number;
+  date?: string;
   erc20: {
     id: `0x${string}`,
     ticker: string,
