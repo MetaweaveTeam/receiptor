@@ -9,16 +9,16 @@ import Step2 from './Step2';
 import Step3 from './Step3';
 
 export default function Init() {
-  const [txid, setTxid] = useState<ethers.providers.TransactionResponse>();
+  const [tx, setTx] = useState<ethers.providers.TransactionResponse>();
   const [por, setPor] = useState<PoR>();
 
-  const goToStep2 = (txid: ethers.providers.TransactionResponse) => setTxid(txid)
+  const goToStep2 = (tx: ethers.providers.TransactionResponse) => setTx(tx)
   const goToStep3 = (por: PoR) => setPor(por)
 
   return (<Container fluid>
     {process.env.NODE_ENV === "development" && <DebugBanner />}
-    {!por && !txid && <Step1 submit={goToStep2} />}
-    {!por && txid && <Step2 txid={txid} submit={goToStep3} />}
+    {!por && !tx && <Step1 submit={goToStep2} />}
+    {!por && tx && <Step2 tx={tx} submit={goToStep3} />}
     {por && <Step3 por={por} />}
   </Container>);
 }

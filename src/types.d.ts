@@ -24,4 +24,17 @@ interface PoR {
   vat: number;
 }
 
-export { ArTransaction, ArTag, PoR };
+interface Receipt {
+  txid: `0x${string}`;
+  timestamp?: number;
+  erc20: {
+    id: `0x${string}`,
+    ticker: string,
+    name: string
+  };
+  amount: number;
+  from: `0x${string}`;
+  to: `0x${string}`;
+}
+
+export { ArTransaction, ArTag, PoR, Receipt };
