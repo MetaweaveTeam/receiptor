@@ -32,7 +32,7 @@ export default function UserInput({amount, onChange}: {amount: number, onChange:
         <Col>VAT rate</Col>
       </Row>
       <Card.Divider />
-      <Row>
+      <Row gap={1}>
         <Col>VAT</Col>
         <Col>
           <Text b>
@@ -49,17 +49,26 @@ export default function UserInput({amount, onChange}: {amount: number, onChange:
             aria-label="vat"
             size="xs"
             type="number"
-            css={{textAlign: 'right'}}
-            width="100px"
-            defaultValue={0.00}
+            fullWidth
           />
         </Col>
       </Row>
       <Card.Divider />
-      <Row>
+      <Row gap={1}>
         <Col>Total</Col>
         <Col>{num.format(amount)}</Col>
-        <Col></Col>
+        <Col>
+          <Input
+            min="0"
+            max="100"
+            type="range"
+            size="xs"
+            aria-label="vat"
+            value={vat}
+            onChange={onChangeVAT}
+            fullWidth
+          />
+        </Col>
       </Row>
     </Container>
   )

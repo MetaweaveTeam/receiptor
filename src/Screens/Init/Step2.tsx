@@ -101,13 +101,13 @@ export default function Step2({tx, submit}: {tx: ethers.providers.TransactionRes
             <Spacer />
             <Card.Divider />
             <Spacer />
-            <Text h2>from {walletAccount.account.address === receipt.from && '(you)'}</Text>
+            <Text h2>From {walletAccount.account.address === receipt.from && '(you)'}</Text>
             <Text h3><EthAddress hash={receipt.from} /></Text>
               <Textarea aria-label='notes' disabled size="lg" placeholder="The other party will be able to provide custom notes" css={{width: '100%'}}/>
             <Spacer y={2} />
-            <Text h2>to {walletAccount.account.address === receipt.to && '(you)'}</Text>
+            <Text h2>To {walletAccount.account.address === receipt.to && '(you)'}</Text>
             <Text h3><EthAddress hash={receipt.to} /></Text>
-            <Card>
+            <Card isHoverable>
               <Card.Body>
                 <Textarea aria-label='notes' size="lg" value={notes} onChange={onChangeNotes} placeholder="Notes (optional)" css={{width: '100%'}}/>
                 <UserInput amount={receipt.amount} onChange={onUserInputChange} />
