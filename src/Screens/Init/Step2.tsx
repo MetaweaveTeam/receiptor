@@ -4,7 +4,7 @@ import ABI from '../../ABI/usdt.json';
 import './Index.css';
 import {useAccount} from '@web3modal/react';
 import { fetchToken } from '@wagmi/core';
-import { Button, Grid, Text, Spacer, Card, Textarea, FormElement } from '@nextui-org/react';
+import { Button, Grid, Text, Spacer, Card, Textarea, FormElement, Container, Row, Col } from '@nextui-org/react';
 import { PoR, Receipt } from '../../types';
 import Txid from '../../Components/Txid';
 import EthAddress from '../../Components/EthAddress';
@@ -90,15 +90,19 @@ export default function Step2({tx, submit}: {tx: ethers.providers.TransactionRes
     : <Grid.Container justify='center' alignItems="center" alignContent="center" direction="column" gap={2}>
         <Card isHoverable>
           <Card.Body>
-            <Text h1 css={{textAlign: 'right'}}>Receipt</Text>
-            <Text css={{textAlign: 'right'}}>no. <Txid hash={tx.hash as `0x${string}`} /></Text>
-            <Text css={{textAlign: 'right'}}>{receipt.date}</Text>
+            <Container>
+              <Row>
+                <Col css={{textAlign: 'left'}}>
+                  <img width="70rem" src="https://arweave.net/iLd18mc2LrOuOdnimK6SnzPXedIidIgnQK4oBKZePhQ" alt="Receiptor's Logo" />
+                </Col>
+                <Col>
+                  <Text h1 css={{textAlign: 'right'}}>Receipt</Text>
+                  <Text css={{textAlign: 'right'}}>no. <Txid hash={tx.hash as `0x${string}`} /></Text>
+                  <Text css={{textAlign: 'right'}}>{receipt.date}</Text>
+                </Col>
+              </Row>
+            </Container>
             <Spacer y={0.5} />
-            <Card.Divider />
-            <Spacer y={2} />
-            <Text h2 css={{textAlign: 'center'}}>{receipt.amount} {receipt.erc20.ticker}</Text>
-            <Text>{receipt.erc20.name}</Text>
-            <Spacer />
             <Card.Divider />
             <Spacer />
             <Text h2>From {walletAccount.account.address === receipt.from && '(you)'}</Text>
@@ -110,7 +114,7 @@ export default function Step2({tx, submit}: {tx: ethers.providers.TransactionRes
             <Card isHoverable>
               <Card.Body>
                 <Textarea aria-label='notes' size="lg" value={notes} onChange={onChangeNotes} placeholder="Notes (optional)" css={{width: '100%'}}/>
-                <UserInput amount={receipt.amount} onChange={onUserInputChange} />
+                <UserInput receipt={receipt} onChange={onUserInputChange} />
               </Card.Body>
               <Button color="gradient" onPress={() => submit({txid: tx.hash as `0x${string}`, vat: vat, notes: notes})}>SIGN & ENCRYPT ({`${otherPartieAddress?.slice(0,6)}...${otherPartieAddress?.slice(-4,otherPartieAddress.length)})`}</Button>
             </Card>
