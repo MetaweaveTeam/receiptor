@@ -4,7 +4,7 @@ import ABI from '../../ABI/usdt.json';
 import './Index.css';
 import {useAccount} from '@web3modal/react';
 import { fetchToken } from '@wagmi/core';
-import { Button, Grid, Text, Spacer, Card, Textarea } from '@nextui-org/react';
+import { Button, Grid, Text, Spacer, Card, Textarea, FormElement } from '@nextui-org/react';
 import { PoR, Receipt } from '../../types';
 import Txid from '../../Components/Txid';
 import EthAddress from '../../Components/EthAddress';
@@ -76,16 +76,19 @@ export default function Step2({tx, submit}: {tx: ethers.providers.TransactionRes
     )
   }
 
-  const onUserInputChange = ({notes, vat}: {notes: string, vat: number}) => {
+  const onUserInputChange = ({vat}: {vat: number}) => {
     setVat(vat)
-    setNotes(notes)
+  }
+
+  const onChangeNotes = (notes: React.ChangeEvent<FormElement>) => {
+    setNotes(notes.currentTarget.value)
   }
 
   return(
     isLoading
     ? <Loading />
     : <Grid.Container justify='center' alignItems="center" alignContent="center" direction="column" gap={2}>
-        <Card>
+        <Card isHoverable>
           <Card.Body>
             <Text h1 css={{textAlign: 'right'}}>Receipt</Text>
             <Text css={{textAlign: 'right'}}>no. <Txid hash={tx.hash as `0x${string}`} /></Text>
@@ -106,6 +109,7 @@ export default function Step2({tx, submit}: {tx: ethers.providers.TransactionRes
             <Text h3><EthAddress hash={receipt.to} /></Text>
             <Card>
               <Card.Body>
+                <Textarea aria-label='notes' size="lg" value={notes} onChange={onChangeNotes} placeholder="Notes (optional)" css={{width: '100%'}}/>
                 <UserInput amount={receipt.amount} onChange={onUserInputChange} />
               </Card.Body>
               <Button color="gradient" onPress={() => submit({txid: tx.hash as `0x${string}`, vat: vat, notes: notes})}>SIGN & ENCRYPT ({`${otherPartieAddress?.slice(0,6)}...${otherPartieAddress?.slice(-4,otherPartieAddress.length)})`}</Button>

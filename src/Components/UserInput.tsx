@@ -1,38 +1,66 @@
-import { Col, Container, FormElement, Input, Row, Textarea } from "@nextui-org/react";
+import { Card, Col, Container, FormElement, Input, Row, Spacer, Text } from "@nextui-org/react";
 import { useState } from "react";
 
-export default function UserInput({amount, onChange}: {amount: number | undefined, onChange: ({notes, vat}: {notes: string, vat: number}) => void}) {
+const num = Intl.NumberFormat('en-US', {minimumFractionDigits: 2 })
+
+export default function UserInput({amount, onChange}: {amount: number, onChange: ({vat}: {vat: number}) => void}) {
   const [vat, setVat] = useState<number>(0)
-  const [notes, setNotes] = useState("")
+  const [vatAmount, setVatAmount] = useState<number>(0)
+  const [price, setPrice] = useState<number>(amount)
 
   const onChangeVAT = (vat: React.ChangeEvent<FormElement>) => {
-    setVat(Number(vat.currentTarget.value))
-    onChange({notes, vat: Number(vat.currentTarget.value)})
-  }
+    const vatRate = Number(vat.currentTarget.value)
 
-  const onChangeNotes = (notes: React.ChangeEvent<FormElement>) => {
-    setNotes(notes.currentTarget.value)
-    onChange({notes: notes.currentTarget.value, vat})
+    if(!isNaN(vatRate)){
+      setPrice(amount - (amount * vatRate) / 100)
+      setVatAmount((amount * vatRate) / 100)
+      setVat(vatRate)
+      onChange({vat: vatRate})
+    }
   }
-
-  return(<>
-    <Textarea aria-label='notes' size="lg" value={notes} onChange={onChangeNotes} placeholder="Notes (optional)" css={{width: '100%'}}/>
-    <Container>
+  
+  return(
+    <Container css={{textAlign: 'right'}}>
+      <Spacer />
       <Row>
         <Col>Price</Col>
-        <Col>{amount}</Col>
+        <Col>
+          <Text b>
+            {num.format(price)}
+          </Text>
+        </Col>
         <Col>VAT rate</Col>
       </Row>
+      <Card.Divider />
       <Row>
         <Col>VAT</Col>
-        <Col>0</Col>
-        <Col><Input labelRight="%" onChange={onChangeVAT} value={vat} aria-label="vat" size="xs" /></Col>
+        <Col>
+          <Text b>
+            {num.format(vatAmount)}
+          </Text>
+        </Col>
+        <Col>
+          <Input
+            min="0"
+            max="100"
+            labelRight="%"
+            onChange={onChangeVAT}
+            value={vat}
+            aria-label="vat"
+            size="xs"
+            type="number"
+            css={{textAlign: 'right'}}
+            width="100px"
+            defaultValue={0.00}
+          />
+        </Col>
       </Row>
+      <Card.Divider />
       <Row>
         <Col>Total</Col>
-        <Col>50</Col>
-        <Col>fds</Col>
+        <Col>{num.format(amount)}</Col>
+        <Col></Col>
       </Row>
     </Container>
-  </>)
+  )
 }
